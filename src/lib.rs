@@ -1,3 +1,4 @@
+use std::env;
 use std::error;
 use std::fmt;
 use std::fs;
@@ -53,6 +54,13 @@ pub fn to_absolute(current: impl AsRef<Path>, relative: impl AsRef<Path>) -> Res
     let joined = current.join(relative);
 
     canonicalize(joined)
+}
+
+/// get the absolute path for specified file, relative to current working
+/// directory.
+pub fn to_absolute_from_current_dir(relative: impl AsRef<Path>) -> Result<PathBuf> {
+    let current_dir = env::current_dir()?;
+    to_absolute(current_dir, relative)
 }
 
 fn canonicalize(path: impl AsRef<Path>) -> Result<PathBuf> {
