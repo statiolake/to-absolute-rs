@@ -63,7 +63,7 @@ pub fn to_absolute_from_current_dir(relative: impl AsRef<Path>) -> Result<PathBu
     to_absolute(current_dir, relative)
 }
 
-fn canonicalize(path: impl AsRef<Path>) -> Result<PathBuf> {
+pub fn canonicalize(path: impl AsRef<Path>) -> Result<PathBuf> {
     let canonicalized = fs::canonicalize(path.as_ref())?;
     let components = canonicalized.components().map(|component| match component {
         Component::Prefix(prefix) => match prefix.kind() {
