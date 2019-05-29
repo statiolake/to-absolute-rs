@@ -90,31 +90,42 @@ mod tests {
 
     #[test]
     fn test_supported() {
-        assert_eq!(
-            r#"C:\Windows\System32"#,
-            toabs(r#"C:\"#, r#".\Windows\System32"#).unwrap()
-        );
+        if cfg!(windows) {
+            assert_eq!(
+                r#"C:\Windows\System32"#,
+                toabs(r#"C:\"#, r#".\Windows\System32"#).unwrap()
+            );
 
-        assert_eq!(
-            r#"C:\Windows\System32"#,
-            toabs(r#"C:\Program Files"#, r#"..\Windows\System32"#).unwrap()
-        );
+            assert_eq!(
+                r#"C:\Windows\System32"#,
+                toabs(r#"C:\Program Files"#, r#"..\Windows\System32"#).unwrap()
+            );
 
-        assert_eq!(
-            r#"C:\Windows\System32"#,
-            toabs(
-                r#"C:\Program Files\..\Windows\Fonts"#,
-                r#"..\..\Windows\System32"#
-            )
-            .unwrap()
-        );
+            assert_eq!(
+                r#"C:\Windows\System32"#,
+                toabs(
+                    r#"C:\Program Files\..\Windows\Fonts"#,
+                    r#"..\..\Windows\System32"#
+                )
+                .unwrap()
+            );
+        } else {
+            assert_eq!("/usr/share", toabs("/", "./usr/share").unwrap());
+            assert_eq!("/usr/share", toabs("/opt", "../usr/share").unwrap());
+            assert_eq!(
+                "/usr/share",
+                toabs("/opt/../usr/local/bin", "../../share").unwrap()
+            );
+        }
     }
 
     #[test]
     fn test_unsupported() {
-        assert!(toabs(r#"\\?\pictures"#, r#".\Windows\System32"#).is_err());
+        if cfg!(windows) {
+            assert!(toabs(r#"\\?\pictures"#, r#".\Windows\System32"#).is_err());
 
-        // DOS Device Path Syntax must not have `.` or `..` or something...
-        assert!(toabs(r#"\\?\C:\"#, r#".\Windows\System32"#).is_err());
+            // DOS Device Path Syntax must not have `.` or `..` or something...
+            assert!(toabs(r#"\\?\C:\"#, r#".\Windows\System32"#).is_err());
+        }
     }
 }
