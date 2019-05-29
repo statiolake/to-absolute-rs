@@ -71,7 +71,7 @@ pub fn canonicalize(path: impl AsRef<Path>) -> Result<PathBuf> {
                 let disk = disk as char;
                 Ok(format!("{}:", disk).into())
             }
-            _ => return Err(Error::UnsupportedPrefix),
+            _ => Err(Error::UnsupportedPrefix),
         },
         other => Ok(other.as_os_str().to_os_string()),
     });
