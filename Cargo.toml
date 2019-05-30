@@ -3,5 +3,10 @@ name = "to_absolute"
 version = "0.1.0"
 authors = ["statiolake <statiolake@gmail.com>"]
 edition = "2018"
+repository = "https://github.com/statiolake/to-absolute-rs"
+keywords = ["path"]
+license-file = "LICENSE"
+readme = "README.md"
+description = "Simple rust library to get absolute path for a existing path."
 
 [dependencies]
